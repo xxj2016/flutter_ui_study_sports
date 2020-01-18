@@ -3,22 +3,6 @@ import 'package:flutter_ui_study_sports/data.dart';
 import 'package:flutter_ui_study_sports/utils.dart';
 
 import 'utils.dart';
-import 'utils.dart';
-import 'utils.dart';
-import 'utils.dart';
-import 'utils.dart';
-import 'utils.dart';
-import 'utils.dart';
-import 'utils.dart';
-import 'utils.dart';
-import 'utils.dart';
-import 'utils.dart';
-import 'utils.dart';
-import 'utils.dart';
-import 'utils.dart';
-import 'utils.dart';
-import 'utils.dart';
-import 'utils.dart';
 
 void main() => runApp(MaterialApp(
       home: MyApp(),
@@ -181,6 +165,7 @@ class ProductScreenBottomPart extends StatefulWidget {
 
 class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
   bool isExpanded = false;
+  int currentSizeIndex = 0;
 
   void _expand() {
     setState(() {
@@ -238,20 +223,104 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
             ),
           ),
           Padding(
-              padding: EdgeInsets.only(
-                left: screenAwareSize(26.0, context),
-                bottom: screenAwareSize(10.0, context),
+            padding: EdgeInsets.only(
+              left: screenAwareSize(26.0, context),
+              bottom: screenAwareSize(10.0, context),
+            ),
+            child: GestureDetector(
+              onTap: _expand,
+              child: Text(
+                isExpanded ? "less" : "more..",
+                style: TextStyle(
+                    color: Color(0xfffb382f), fontWeight: FontWeight.w700),
               ),
-              child: GestureDetector(
-                onTap: _expand,
-                child: Text(
-                  isExpanded ? "less" : "more..",
+            ),
+          ),
+          SizedBox(
+            height: screenAwareSize(12.0, context),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              left: screenAwareSize(15.0, context),
+              right: screenAwareSize(75.0, context),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  "Size",
                   style: TextStyle(
-                      color: Color(0xfffb382f), fontWeight: FontWeight.w700),
+                    color: Color(0xff949598),
+                    fontSize: screenAwareSize(10.0, context),
+                    fontFamily: "Montserrat-SemiBold",
+                  ),
                 ),
-              ))
+                Text(
+                  "Quantity",
+                  style: TextStyle(
+                    color: Color(0xff949598),
+                    fontSize: screenAwareSize(10.0, context),
+                    fontFamily: "Montserrat-SemiBold",
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 8.0,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: screenAwareSize(20.0, context)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  height: screenAwareSize(38.0, context),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: sizeNumlist.map((item) {
+                      var index = sizeNumlist.indexOf(item);
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            currentSizeIndex = index;
+                          });
+                        },
+                        child: sizeItem(item, index == currentSizeIndex, context),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
+}
+
+Widget sizeItem(String size, bool isSelected, BuildContext context) {
+  return Padding(
+    padding: EdgeInsets.only(left: 15.0),
+    child: Container(
+      width: screenAwareSize(30.0, context),
+      height: screenAwareSize(30.0, context),
+      decoration: BoxDecoration(
+          color: isSelected ? Color(0xfffc3930) : Color(0xff525663),
+          boxShadow: [
+            BoxShadow(
+              color: isSelected ? Colors.black.withOpacity(.5) : Colors.black12,
+              offset: Offset(0.0, 10.0),
+              blurRadius: 10.0,
+            )
+          ]),
+      child: Center(
+        child: Text(
+          size,
+          style: TextStyle(color: Colors.white, fontFamily: "Montserrat-Bold"),
+        ),
+      ),
+    ),
+  );
 }
