@@ -40,11 +40,11 @@ class _MyAppState extends State<MyApp> {
             onPressed: () {},
           ),
           title: Text(
-            "Energy Cloud1",
+            "Energy Cloud",
             style: TextStyle(
               color: Colors.white,
               fontSize: screenAwareSize(18.0, context),
-              // fontFamily: "",
+              fontFamily: "Montserrat-Bold",
             ),
           ),
           centerTitle: true,
@@ -90,6 +90,7 @@ class _ProductScreenTopPartState extends State<ProductScreenTopPart> {
             child: Image.asset(
               "assets/adidas.png",
               width: double.infinity,
+              height: double.infinity,
               fit: BoxFit.cover,
             ),
           ),
@@ -121,7 +122,7 @@ class _ProductScreenTopPartState extends State<ProductScreenTopPart> {
                         fontFamily: "Montserrat-SemiBold"),
                   ),
                   SizedBox(
-                    height: screenAwareSize(8.9, context),
+                    height: screenAwareSize(8.0, context),
                   ),
                   Row(
                     children: <Widget>[
@@ -167,7 +168,8 @@ class ProductScreenBottomPart extends StatefulWidget {
 class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
   bool isExpanded = false;
   int currentSizeIndex = 0;
-  int _counter = 0;
+  int currentColorIndex = 0;
+  int _counter = 1;
 
   void _increase() {
     setState(() {
@@ -177,7 +179,8 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
 
   void _decrease() {
     setState(() {
-      _counter == 0 ? _counter = 0 : _counter--;
+      if (_counter == 1) return;
+      _counter--;
     });
   }
 
@@ -191,7 +194,12 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
     List<Widget> colorItemList = new List();
 
     for (var i = 0; i < colors.length; i++) {
-      colorItemList.add(colorItem(colors[i], true, context, () {}));
+      colorItemList
+          .add(colorItem(colors[i], i == currentColorIndex, context, () {
+        setState(() {
+          currentColorIndex = i;
+        });
+      }));
     }
 
     return colorItemList;
@@ -415,6 +423,102 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
               children: colorSelector(),
             ),
           ),
+          SizedBox(
+            height: screenAwareSize(8.0, context),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: screenAwareSize(20.0, context)),
+            child: Text(
+              "Price",
+              style: TextStyle(
+                color: Color(0xff949598),
+                fontFamily: "Montserrat-SemiBold",
+              ),
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            height: screenAwareSize(120.0, context),
+            child: Stack(
+              alignment: Alignment.topCenter,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(left: screenAwareSize(22.0, context)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: screenAwareSize((18.0), context),
+                        ),
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              "\$",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: screenAwareSize(20.0, context),
+                                fontFamily: "Montserrat-Medium",
+                              ),
+                            ),
+                            SizedBox(
+                              width: screenAwareSize(2.0, context),
+                            ),
+                            Text(
+                              "80",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: screenAwareSize(35.0, context),
+                                fontFamily: "Montserrat-Medium",
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenAwareSize(10.0, context),
+                      ),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: MaterialButton(
+                          color: Color(0xfffb382f),
+                          padding: EdgeInsets.symmetric(
+                            vertical: screenAwareSize(14.0, context),
+                          ),
+                          onPressed: () {},
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                left: screenAwareSize(35.0, context),
+                              ),
+                              child: Text(
+                                "Add To Cart",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: screenAwareSize(15.0, context),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Positioned(
+                  right: -40.0,
+                  bottom: -60.0,
+                  child: Image.asset("assets/cart.png",
+                      width: screenAwareSize(190.0, context),
+                      height: screenAwareSize(155.0, context),
+                      fit: BoxFit.cover),
+                )
+              ],
+            ),
+          )
         ],
       ),
     );
