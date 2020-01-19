@@ -59,12 +59,13 @@ class _MyAppState extends State<MyApp> {
             )
           ],
         ),
-        body: Column(
+        body: SingleChildScrollView(
+            child: Column(
           children: <Widget>[
             ProductScreenTopPart(),
             ProductScreenBottomPart(),
           ],
-        ),
+        )),
       ),
     );
   }
@@ -166,11 +167,34 @@ class ProductScreenBottomPart extends StatefulWidget {
 class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
   bool isExpanded = false;
   int currentSizeIndex = 0;
+  int _counter = 0;
+
+  void _increase() {
+    setState(() {
+      _counter++;
+    });
+  }
+
+  void _decrease() {
+    setState(() {
+      _counter == 0 ? _counter = 0 : _counter--;
+    });
+  }
 
   void _expand() {
     setState(() {
       isExpanded ? isExpanded = false : isExpanded = true;
     });
+  }
+
+  List<Widget> colorSelector() {
+    List<Widget> colorItemList = new List();
+
+    for (var i = 0; i < colors.length; i++) {
+      colorItemList.add(colorItem(colors[i], true, context, () {}));
+    }
+
+    return colorItemList;
   }
 
   @override
@@ -266,11 +290,11 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
               ],
             ),
           ),
-          SizedBox(
-            height: 8.0,
-          ),
           Padding(
-            padding: EdgeInsets.only(left: screenAwareSize(20.0, context)),
+            padding: EdgeInsets.only(
+              left: screenAwareSize(20.0, context),
+              right: screenAwareSize(10.0, context),
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -286,12 +310,109 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
                             currentSizeIndex = index;
                           });
                         },
-                        child: sizeItem(item, index == currentSizeIndex, context),
+                        child:
+                            sizeItem(item, index == currentSizeIndex, context),
                       );
                     }).toList(),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Container(
+                    width: screenAwareSize(100.0, context),
+                    height: screenAwareSize(30.0, context),
+                    decoration: BoxDecoration(
+                      color: Color(0xff525663),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Flexible(
+                          flex: 3,
+                          child: GestureDetector(
+                            onTap: _decrease,
+                            child: Container(
+                              height: double.infinity,
+                              child: Center(
+                                child: Text(
+                                  "-",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20.0,
+                                    fontFamily: "Montserrat-Bold",
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        divider(),
+                        Flexible(
+                          flex: 3,
+                          child: Container(
+                            height: double.infinity,
+                            child: Center(
+                              child: Text(
+                                _counter.toString(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20.0,
+                                  fontFamily: "Montserrat-Bold",
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        divider(),
+                        Flexible(
+                          flex: 3,
+                          child: GestureDetector(
+                            onTap: _increase,
+                            child: Container(
+                              height: double.infinity,
+                              child: Center(
+                                child: Text(
+                                  "+",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20.0,
+                                    fontFamily: "Montserrat-Bold",
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
               ],
+            ),
+          ),
+          SizedBox(
+            height: 8.0,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: screenAwareSize(18.0, context)),
+            child: Text(
+              "Select Color",
+              style: TextStyle(
+                color: Color(0xff949598),
+                fontSize: screenAwareSize(10.0, context),
+                fontFamily: "Montserrat-SemiBold",
+              ),
+            ),
+          ),
+          SizedBox(
+            height: screenAwareSize(8.0, context),
+          ),
+          Container(
+            width: double.infinity,
+            height: screenAwareSize(34.0, context),
+            margin: EdgeInsets.only(left: screenAwareSize(20.0, context)),
+            child: Row(
+              children: colorSelector(),
             ),
           ),
         ],
@@ -302,18 +423,19 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
 
 Widget sizeItem(String size, bool isSelected, BuildContext context) {
   return Padding(
-    padding: EdgeInsets.only(left: 15.0),
+    padding: EdgeInsets.only(left: 12.0),
     child: Container(
       width: screenAwareSize(30.0, context),
       height: screenAwareSize(30.0, context),
       decoration: BoxDecoration(
           color: isSelected ? Color(0xfffc3930) : Color(0xff525663),
+          borderRadius: BorderRadius.circular(5.0),
           boxShadow: [
             BoxShadow(
               color: isSelected ? Colors.black.withOpacity(.5) : Colors.black12,
               offset: Offset(0.0, 10.0),
               blurRadius: 10.0,
-            )
+            ),
           ]),
       child: Center(
         child: Text(
@@ -321,6 +443,70 @@ Widget sizeItem(String size, bool isSelected, BuildContext context) {
           style: TextStyle(color: Colors.white, fontFamily: "Montserrat-Bold"),
         ),
       ),
+    ),
+  );
+}
+
+Widget colorItem(
+    Color color, bool isSelected, BuildContext context, VoidCallback _ontab) {
+  return GestureDetector(
+    onTap: _ontab,
+    child: Padding(
+      padding: EdgeInsets.only(
+        left: screenAwareSize(10.0, context),
+      ),
+      child: Container(
+        width: screenAwareSize(30.0, context),
+        height: screenAwareSize(30.0, context),
+        decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(5.0),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(.8),
+                      blurRadius: 10.0,
+                      offset: Offset(0.0, 10.0),
+                    ),
+                  ]
+                : []),
+        child: ClipPath(
+          clipper: MClipper(),
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: color,
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+class MClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = new Path();
+    path.lineTo(0.0, size.height);
+    path.lineTo(size.width * 0.2, size.height);
+    path.lineTo(size.width, size.height * 0.2);
+    path.lineTo(size.width, 0.0);
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) {
+    return true;
+  }
+}
+
+Widget divider() {
+  return Padding(
+    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+    child: Container(
+      width: 0.8,
+      color: Colors.black,
     ),
   );
 }
